@@ -34,6 +34,7 @@ public class Municipality {
             throw new IllegalArgumentException("Nome del municipio non valido");
         if (province == null)
             throw new IllegalArgumentException("Provincia non valida");
+
         if (name.length() > 100)
             throw new IllegalArgumentException("La lunghezza del nome del comune non è valida");
         if (!istatCode.matches("[0-9]{6}"))

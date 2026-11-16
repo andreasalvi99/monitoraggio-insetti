@@ -26,6 +26,7 @@ public class Province {
             throw new IllegalArgumentException("Il nome della provincia non è valido");
         if (code == null || code.isBlank())
             throw new IllegalArgumentException("La sigla della provincia non è valida");
+
         if (name.length() > 100)
             throw new IllegalArgumentException("Il nome della provincia è troppo lungo");
         if (code.length() != 2)

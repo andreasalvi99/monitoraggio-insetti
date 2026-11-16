@@ -35,6 +35,7 @@ public class Insect {
             throw new IllegalArgumentException("Nome comune non valido");
         if (scientificName == null || scientificName.isBlank())
             throw new IllegalArgumentException("Nome scientifico non valido");
+
         if (commonName.length() > 100)
             throw new IllegalArgumentException("Lunghezza nome comune non valida");
         if (scientificName.length() > 150)

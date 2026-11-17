@@ -152,4 +152,9 @@ public class Report {
         this.confirmedInsect = confirmInsect;
         this.status = "ACCERTATA";
     }
+
+    public void reject() {
+        this.confirmedInsect = null;
+        this.status = "RESPINTA";
+    }
 }

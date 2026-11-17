@@ -18,6 +18,11 @@ public class ErrorsHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    @ExceptionHandler(InsectNotFoundException.class)
+    public ResponseEntity<String> insectNotFound(InsectNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleInvalidArgument(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());

@@ -18,4 +18,9 @@ public class InsectService {
     public List<Insect> findAll() {
         return this.insectRepository.findAll();
     }
+
+    public Insect create(String commonName, String scientificName, String description, String imgUrl) {
+        Insect newInsect = new Insect(commonName, scientificName, description, imgUrl);
+        return this.insectRepository.save(newInsect);
+    }
 }

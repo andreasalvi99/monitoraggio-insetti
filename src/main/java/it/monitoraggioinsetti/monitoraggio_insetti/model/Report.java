@@ -144,4 +144,12 @@ public class Report {
     public Case getAssociatedCase() {
         return this.associatedCase;
     }
+
+    public void confirm(Insect confirmInsect) {
+        if (confirmInsect == null)
+            throw new IllegalArgumentException("Insetto non valido");
+
+        this.confirmedInsect = confirmInsect;
+        this.status = "ACCERTATA";
+    }
 }

@@ -1,4 +1,4 @@
-package it.monitoraggioinsetti.monitoraggio_insetti.errors;
+package it.monitoraggioinsetti.monitoraggio_insetti.error;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

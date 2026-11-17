@@ -1,9 +1,12 @@
 package it.monitoraggioinsetti.monitoraggio_insetti.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +15,7 @@ import it.monitoraggioinsetti.monitoraggio_insetti.dto.request.NewReportRequest;
 import it.monitoraggioinsetti.monitoraggio_insetti.dto.request.ReportStatusRequest;
 import it.monitoraggioinsetti.monitoraggio_insetti.dto.response.NewReportResponse;
 import it.monitoraggioinsetti.monitoraggio_insetti.dto.response.ReportStatusResponse;
+import it.monitoraggioinsetti.monitoraggio_insetti.dto.response.ReportSummaryResponse;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Report;
 import it.monitoraggioinsetti.monitoraggio_insetti.service.ReportService;
 
@@ -21,6 +25,23 @@ public class ReportController {
 
     public ReportController(ReportService reportService) {
         this.reportService = reportService;
+    }
+
+    private ReportSummaryResponse convert(Report report) {
+        ReportSummaryResponse result = new ReportSummaryResponse(report.getId(), report.getStatus(),
+                report.getReportDate());
+        return result;
+    }
+
+    @GetMapping("/api/segnalazioni")
+    public ResponseEntity<List<ReportSummaryResponse>> showAll() {
+        List<Report> reports = this.reportService.findAll();
+        List<ReportSummaryResponse> reportsConverted = new ArrayList<>();
+        for (Report report : reports) {
+            reportsConverted.add(convert(report));
+        }
+
+        return ResponseEntity.ok(reportsConverted);
     }
 
     @PostMapping("/api/segnalazioni")

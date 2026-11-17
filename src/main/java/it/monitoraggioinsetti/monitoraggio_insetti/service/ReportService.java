@@ -72,6 +72,10 @@ public class ReportService {
         return this.reportRepository.findByTrackingCodeHash(trackingCodeHash);
     }
 
+    public List<Report> findAll() {
+        return this.reportRepository.findAll();
+    }
+
     public NewReportResponse create(BigDecimal latitude, BigDecimal longitude, Long reportedInsectId,
             Long municipalityId,
             String reporterEmail, String description) {

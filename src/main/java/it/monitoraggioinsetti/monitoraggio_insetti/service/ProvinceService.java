@@ -18,4 +18,9 @@ public class ProvinceService {
     public List<Province> findAll() {
         return this.provinceRepository.findAll();
     }
+
+    public Province create(String name, String code) {
+        Province newProvince = new Province(name, code);
+        return this.provinceRepository.save(newProvince);
+    }
 }

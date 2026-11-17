@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import it.monitoraggioinsetti.monitoraggio_insetti.dto.NewReportResponse;
 import it.monitoraggioinsetti.monitoraggio_insetti.error.InsectNotFoundException;
 import it.monitoraggioinsetti.monitoraggio_insetti.error.MunicipalityNotFoundException;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Insect;
@@ -67,7 +68,7 @@ public class ReportService {
         return this.reportRepository.findAll();
     }
 
-    public Report create(BigDecimal latitude, BigDecimal longitude, Long reportedInsectId,
+    public NewReportResponse create(BigDecimal latitude, BigDecimal longitude, Long reportedInsectId,
             Long municipalityId,
             String reporterEmail, String description) {
         Insect toFindInsect = findInsect(reportedInsectId);
@@ -76,6 +77,7 @@ public class ReportService {
         String trackingCodeHash = hashTrackingCode(trackingCode);
         Report newReport = new Report(trackingCodeHash, latitude, longitude, toFindInsect, toFindMunicipality,
                 reporterEmail, description);
-        return this.reportRepository.save(newReport);
+        Report savedReport = this.reportRepository.save(newReport);
+        return new NewReportResponse(savedReport.getId(), trackingCode);
     }
 }

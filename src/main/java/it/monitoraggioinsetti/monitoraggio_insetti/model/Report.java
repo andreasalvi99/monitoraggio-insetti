@@ -157,4 +157,9 @@ public class Report {
         this.confirmedInsect = null;
         this.status = "RESPINTA";
     }
+
+    public void reopen() {
+        this.status = "IN_ATTESA";
+        this.confirmedInsect = null;
+    }
 }

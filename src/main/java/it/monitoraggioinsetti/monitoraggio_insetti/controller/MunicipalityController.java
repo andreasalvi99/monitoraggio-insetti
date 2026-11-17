@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.monitoraggioinsetti.monitoraggio_insetti.dto.NewMunicipalityRequest;
+import it.monitoraggioinsetti.monitoraggio_insetti.dto.request.NewMunicipalityRequest;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Municipality;
 import it.monitoraggioinsetti.monitoraggio_insetti.service.MunicipalityService;
 

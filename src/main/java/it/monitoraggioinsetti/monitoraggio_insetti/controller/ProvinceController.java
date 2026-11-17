@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.monitoraggioinsetti.monitoraggio_insetti.dto.NewProvinceRequest;
+import it.monitoraggioinsetti.monitoraggio_insetti.dto.request.NewProvinceRequest;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Province;
 import it.monitoraggioinsetti.monitoraggio_insetti.service.ProvinceService;
 

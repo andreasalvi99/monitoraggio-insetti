@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import it.monitoraggioinsetti.monitoraggio_insetti.dto.NewReportResponse;
+import it.monitoraggioinsetti.monitoraggio_insetti.dto.response.NewReportResponse;
 import it.monitoraggioinsetti.monitoraggio_insetti.error.InsectNotFoundException;
 import it.monitoraggioinsetti.monitoraggio_insetti.error.MunicipalityNotFoundException;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Insect;

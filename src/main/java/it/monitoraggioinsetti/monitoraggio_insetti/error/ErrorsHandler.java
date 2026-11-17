@@ -1,11 +1,18 @@
 package it.monitoraggioinsetti.monitoraggio_insetti.error;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ErrorsHandler {
+
+    @ExceptionHandler(ProvinceNotFoundException.class)
+    public ResponseEntity<String> provinceNotFound(ProvinceNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleInvalidArgument(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());

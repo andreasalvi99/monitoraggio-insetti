@@ -28,6 +28,11 @@ public class ErrorsHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> userNotFound(UserNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleInvalidArgument(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
@@ -36,5 +41,10 @@ public class ErrorsHandler {
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<String> handleInvalidState(IllegalStateException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler(OperationNotAllowedException.class)
+    public ResponseEntity<String> handleNotAllowedOperation(OperationNotAllowedException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 }

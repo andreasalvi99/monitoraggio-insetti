@@ -8,6 +8,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.HexFormat;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -64,8 +65,11 @@ public class ReportService {
         }
     }
 
-    public List<Report> findAll() {
-        return this.reportRepository.findAll();
+    public Optional<Report> findByTrackingcode(String trackingCode) {
+        if (trackingCode == null || trackingCode.isBlank())
+            throw new IllegalArgumentException("Codice di tracciamento obbligatorio");
+        String trackingCodeHash = hashTrackingCode(trackingCode);
+        return this.reportRepository.findByTrackingCodeHash(trackingCodeHash);
     }
 
     public NewReportResponse create(BigDecimal latitude, BigDecimal longitude, Long reportedInsectId,
@@ -80,4 +84,5 @@ public class ReportService {
         Report savedReport = this.reportRepository.save(newReport);
         return new NewReportResponse(savedReport.getId(), trackingCode);
     }
+
 }

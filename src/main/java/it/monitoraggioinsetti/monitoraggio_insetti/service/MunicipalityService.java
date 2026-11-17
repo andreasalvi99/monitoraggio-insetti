@@ -20,7 +20,7 @@ public class MunicipalityService {
         this.provinceRepository = provinceRepository;
     }
 
-    public Province findProvince(Long provinceId) {
+    private Province findProvince(Long provinceId) {
         if (provinceId == null)
             throw new IllegalArgumentException("L'ID della provincia è obbligatorio");
         return this.provinceRepository.findById(provinceId)

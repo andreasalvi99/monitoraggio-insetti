@@ -27,4 +27,9 @@ public class ErrorsHandler {
     public ResponseEntity<String> handleInvalidArgument(IllegalArgumentException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handleInvalidState(IllegalStateException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }

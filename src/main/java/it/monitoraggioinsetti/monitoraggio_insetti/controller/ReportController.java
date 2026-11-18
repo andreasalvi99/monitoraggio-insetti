@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -44,6 +45,11 @@ public class ReportController {
         }
 
         return ResponseEntity.ok(reportsConverted);
+    }
+
+    @GetMapping("/api/segnalazioni/{id}")
+    public ResponseEntity<Report> findById(@PathVariable(name = "id") Long reportId) {
+        return ResponseEntity.ok(this.reportService.findReport(reportId));
     }
 
     @PostMapping(value = "/api/segnalazioni", consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)

@@ -2,6 +2,8 @@ package it.monitoraggioinsetti.monitoraggio_insetti.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +27,7 @@ public class Photo {
     @Column(name = "data_caricamento", nullable = false)
     private LocalDateTime uploadDate;
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "segnalazione_id", nullable = false)
     private Report report;

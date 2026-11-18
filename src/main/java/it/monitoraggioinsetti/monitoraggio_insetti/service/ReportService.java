@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import it.monitoraggioinsetti.monitoraggio_insetti.dto.response.NewReportResponse;
 import it.monitoraggioinsetti.monitoraggio_insetti.error.InsectNotFoundException;
 import it.monitoraggioinsetti.monitoraggio_insetti.error.MunicipalityNotFoundException;
+import it.monitoraggioinsetti.monitoraggio_insetti.error.ReportNotFoundException;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Insect;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Municipality;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Report;
@@ -67,6 +68,12 @@ public class ReportService {
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException("SHA-256 non disponibile", e);
         }
+    }
+
+    public Report findReport(Long reportId) {
+        if (reportId == null)
+            throw new IllegalArgumentException("L'ID della segnalazione è obbligatorio");
+        return this.reportRepository.findById(reportId).orElseThrow(() -> new ReportNotFoundException(reportId));
     }
 
     public Optional<Report> findByTrackingcode(String trackingCode) {

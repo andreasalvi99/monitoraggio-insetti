@@ -1,6 +1,5 @@
 package it.monitoraggioinsetti.monitoraggio_insetti.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -9,14 +8,18 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Iterator;
 import java.util.UUID;
+import org.slf4j.Logger;
 
-import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.web.multipart.MultipartFile;
 
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Photo;
@@ -27,6 +30,7 @@ import it.monitoraggioinsetti.monitoraggio_insetti.repository.PhotoRepository;
 public class PhotoService {
     private final PhotoRepository photoRepository;
     private final Path photosDirectory;
+    private static final Logger logger = LoggerFactory.getLogger(PhotoService.class);
 
     public PhotoService(PhotoRepository photoRepository, @Value("${app.photos.directory}") String photosDirectory) {
         this.photoRepository = photoRepository;
@@ -35,11 +39,27 @@ public class PhotoService {
         createPhotosDirectory();
     }
 
+    private void registerRollbackCleanup(Path destination) {
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCompletion(int status) {
+                if (status == STATUS_ROLLED_BACK) {
+                    try {
+                        Files.deleteIfExists(destination);
+                    } catch (IOException e) {
+                        logger.error(
+                                "Impossibile eliminare il file dopo il rollback: {}", destination, e);
+                    }
+                }
+            }
+        });
+    }
+
     private void createPhotosDirectory() {
         try {
             Files.createDirectories(this.photosDirectory);
         } catch (IOException e) {
-            throw new IllegalStateException("Impossibile cercare la cartella delle foto", e);
+            throw new IllegalStateException("Impossibile creare la cartella delle foto", e);
         }
     }
 
@@ -103,11 +123,14 @@ public class PhotoService {
                 } catch (IOException cleanupException) {
                     e.addSuppressed(cleanupException);
                 }
-                throw new IllegalStateException("Impossibile salvare le foto", e);
+
             }
+            throw new IllegalStateException("Impossibile salvare le foto", e);
         }
+
     }
 
+    @Transactional
     public Photo save(MultipartFile file, Report report) {
         if (file == null || file.isEmpty())
             throw new IllegalArgumentException("La foto è obbligatoria");
@@ -125,6 +148,12 @@ public class PhotoService {
 
         String fileName = UUID.randomUUID() + "." + extension;
         Path destination = this.photosDirectory.resolve(fileName);
+
+        writeFile(file, destination);
+        registerRollbackCleanup(destination);
+
+        Photo photo = new Photo(fileName, report);
+        return this.photoRepository.saveAndFlush(photo);
 
     }
 

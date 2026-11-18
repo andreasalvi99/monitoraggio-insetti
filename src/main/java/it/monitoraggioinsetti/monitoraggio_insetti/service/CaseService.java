@@ -52,6 +52,10 @@ public class CaseService {
 
     }
 
+    private double calculateDistaceMeters(GeographicCenter center, Report report) {
+
+    }
+
     private User findOperator(Long operatorId) {
         if (operatorId == null)
             throw new IllegalArgumentException("L'ID dell'operatore è obbgliatorio");

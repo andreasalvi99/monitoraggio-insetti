@@ -5,5 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Accesso - Monitoraggio insetti</title>
   </head>
-  <body></body>
+  <body>
+    <main>
+      <h1>Accesso operatori</h1>
+
+      <p th:if="${param.error}" role="alert">Email o password non valide</p>
+      <p th:if="${param.logout}">Disconnessione effettuata</p>
+
+      <form th:action="@{/login}" method="post">
+        <div>
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="username"
+            autocomplete="username"
+            required
+          />
+        </div>
+        <button type="submit">Accedi</button>
+      </form>
+    </main>
+  </body>
 </html>

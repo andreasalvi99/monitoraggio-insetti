@@ -11,27 +11,31 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET,
-                                "/api/province",
-                                "/api/comuni",
-                                "/api/insetti")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.POST,
-                                "/api/segnalazioni",
-                                "/api/segnalazioni/stato")
-                        .permitAll()
-                        .anyRequest().hasRole("OPERATORE"))
-                .httpBasic(Customizer.withDefaults());
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+                http
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers(HttpMethod.GET,
+                                                                "/api/province",
+                                                                "/api/comuni",
+                                                                "/api/insetti")
+                                                .permitAll()
+                                                .requestMatchers(HttpMethod.POST,
+                                                                "/api/segnalazioni",
+                                                                "/api/segnalazioni/stato")
+                                                .permitAll()
+                                                .anyRequest().hasRole("OPERATORE"))
+                                .formLogin(form -> form
+                                                .loginPage("/login")
+                                                .defaultSuccessUrl("/api/segnalazioni", true)
+                                                .permitAll())
+                                .httpBasic(Customizer.withDefaults());
 
-        return http.build();
-    }
+                return http.build();
+        }
 }

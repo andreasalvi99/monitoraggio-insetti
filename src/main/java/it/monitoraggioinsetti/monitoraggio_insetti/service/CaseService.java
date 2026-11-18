@@ -12,10 +12,12 @@ import java.util.Set;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.monitoraggioinsetti.monitoraggio_insetti.error.CaseNotFoundException;
 import it.monitoraggioinsetti.monitoraggio_insetti.error.OperationNotAllowedException;
 import it.monitoraggioinsetti.monitoraggio_insetti.error.ReportNotFoundException;
 import it.monitoraggioinsetti.monitoraggio_insetti.error.UserNotFoundException;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Case;
+import it.monitoraggioinsetti.monitoraggio_insetti.model.CaseStatus;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Report;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.User;
 import it.monitoraggioinsetti.monitoraggio_insetti.repository.CaseRepository;
@@ -87,6 +89,10 @@ public class CaseService {
             throw new IllegalArgumentException("L'ID della segnalazione è obbligatorio");
         return this.reportRepository.findByIdForUpdate(reportId)
                 .orElseThrow(() -> new ReportNotFoundException(reportId));
+    }
+
+    public Case findCase(Long caseId) {
+        return this.caseRepository.findById(caseId).orElseThrow(() -> new CaseNotFoundException(caseId));
     }
 
     @Transactional
@@ -165,6 +171,27 @@ public class CaseService {
         }
 
         return createdCases;
+    }
+
+    @Transactional
+    public Case changeStatus(Long caseId, CaseStatus status) {
+        if (status == null)
+            throw new IllegalArgumentException("Lo stato è obbligatorio");
+        if (status == CaseStatus.APERTA)
+            throw new IllegalArgumentException("Per riaprire la pratica scegliere IN_LAVORAZIONE");
+
+        Case caseToChange = findCase(caseId);
+
+        if (status == CaseStatus.IN_LAVORAZIONE)
+            caseToChange.startWork();
+        if (status == CaseStatus.IN_ATTESA)
+            caseToChange.putOnHold();
+        if (status == CaseStatus.EVASA)
+            caseToChange.complete();
+        if (status == CaseStatus.FALLITA)
+            caseToChange.fail();
+
+        return this.caseRepository.save(caseToChange);
     }
 
 }

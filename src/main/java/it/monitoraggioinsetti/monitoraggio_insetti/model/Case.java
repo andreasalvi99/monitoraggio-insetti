@@ -73,7 +73,7 @@ public class Case {
         if (longitude.stripTrailingZeros().scale() > 7)
             throw new IllegalArgumentException("Limite massimo di decimali superato");
 
-        this.status = status.APERTA;
+        this.status = CaseStatus.APERTA;
         this.description = description;
         this.openedAt = LocalDateTime.now();
         this.latitude = latitude;

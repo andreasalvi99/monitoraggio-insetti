@@ -60,7 +60,7 @@ public class VerificationService {
         if ("CONFERMATA".equals(outcome)) {
 
             if (confirmedInsectId == null)
-                throw new IllegalArgumentException("L'insetto accertato è pbbligatorio");
+                throw new IllegalArgumentException("L'insetto accertato è obbligatorio");
 
             Insect confirmedInsect = findInsect(confirmedInsectId);
             toVerify.confirm(confirmedInsect);
@@ -71,6 +71,13 @@ public class VerificationService {
                 throw new IllegalArgumentException("Una verifica respinta non può indicare un insetto accertato");
 
             toVerify.reject();
+
+        } else if ("RIAPERTA".equals(outcome)) {
+
+            if (confirmedInsectId != null)
+                throw new IllegalArgumentException("Una riapertura non può indicare un insetto accertato");
+
+            toVerify.reopen();
 
         } else {
             throw new IllegalArgumentException("Esito non valido");

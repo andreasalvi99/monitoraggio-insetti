@@ -3,6 +3,7 @@ package it.monitoraggioinsetti.monitoraggio_insetti.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import it.monitoraggioinsetti.monitoraggio_insetti.error.OperationNotAllowedException;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.User;
 import it.monitoraggioinsetti.monitoraggio_insetti.repository.UserRepository;
 
@@ -23,5 +24,10 @@ public class UserService {
 
         User operator = new User(name, email, passwordHash, "OPERATORE");
         return this.userRepository.save(operator);
+    }
+
+    public Long findIdByEmail(String email) {
+        return this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new OperationNotAllowedException("Utente autenticato non disponibile")).getId();
     }
 }

@@ -58,6 +58,19 @@ public class CaseService {
 
         double reportLatitude = Math.toRadians(report.getLatitude().doubleValue());
         double reportLongitude = Math.toRadians(report.getLongitude().doubleValue());
+
+        double latitudeDifference = reportLatitude - centerLatitude;
+        double longitudeDifference = reportLongitude - centerLongitude;
+
+        double latitudeHalfSin = Math.sin(latitudeDifference / 2);
+        double longitudeHalfSin = Math.sin(longitudeDifference / 2);
+
+        double a = latitudeHalfSin * latitudeHalfSin
+                + Math.cos(centerLatitude) * Math.cos(reportLatitude) * longitudeHalfSin * longitudeHalfSin;
+
+        a = Math.max(0.0, Math.min(1.0, a));
+
+        double centerAngle = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
     private User findOperator(Long operatorId) {

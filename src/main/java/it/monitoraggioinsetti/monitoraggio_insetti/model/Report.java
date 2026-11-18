@@ -162,4 +162,8 @@ public class Report {
         this.status = "IN_ATTESA";
         this.confirmedInsect = null;
     }
+
+    public void associateWithCase(Case associatedCase) {
+        this.associatedCase = associatedCase;
+    }
 }

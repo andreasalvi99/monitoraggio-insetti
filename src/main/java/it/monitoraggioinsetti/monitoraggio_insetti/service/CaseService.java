@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import it.monitoraggioinsetti.monitoraggio_insetti.error.OperationNotAllowedException;
 import it.monitoraggioinsetti.monitoraggio_insetti.error.ReportNotFoundException;
 import it.monitoraggioinsetti.monitoraggio_insetti.error.UserNotFoundException;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Case;
-import it.monitoraggioinsetti.monitoraggio_insetti.model.Insect;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.Report;
 import it.monitoraggioinsetti.monitoraggio_insetti.model.User;
 import it.monitoraggioinsetti.monitoraggio_insetti.repository.CaseRepository;
@@ -71,6 +71,9 @@ public class CaseService {
         a = Math.max(0.0, Math.min(1.0, a));
 
         double centerAngle = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        double earthRadiusMeters = 6_371_000;
+        return earthRadiusMeters * centerAngle;
     }
 
     private User findOperator(Long operatorId) {
@@ -85,6 +88,7 @@ public class CaseService {
         return this.reportRepository.findById(reportId).orElseThrow(() -> new ReportNotFoundException(reportId));
     }
 
+    @Transactional
     public List<Case> create(List<Long> reportIds, String description, Long operatorId) {
         if (reportIds == null || reportIds.size() < 2)
             throw new IllegalArgumentException("Le segnalazioni devono essere almeno due");
@@ -133,12 +137,27 @@ public class CaseService {
             throw new IllegalArgumentException(
                     "Non ci sono abbastanza segnalazioni associate allo stesso insetto per aprire una pratica");
 
+        List<Case> createdCases = new ArrayList<>();
+
         for (List<Report> group : reportsByInsectId.values()) {
             if (group.size() == maxGroupSize) {
                 GeographicCenter center = calculateCenter(group);
+                for (Report report : group) {
+                    if (calculateDistaceMeters(center, report) > 100)
+                        throw new IllegalArgumentException("La distanza della segnalazione con ID " + report.getId()
+                                + " dista più di 100m dal centro della pratica");
+
+                }
+                Case newCase = new Case(description, center.latitude(), center.longitude(), operator, operator);
+                Case savedCase = this.caseRepository.save(newCase);
+                for (Report report : group) {
+                    report.associateWithCase(savedCase);
+                }
+                createdCases.add(savedCase);
             }
         }
 
+        return createdCases;
     }
 
 }

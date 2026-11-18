@@ -2,6 +2,8 @@ package it.monitoraggioinsetti.monitoraggio_insetti.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import it.monitoraggioinsetti.monitoraggio_insetti.error.OperationNotAllowedException;
 import jakarta.persistence.Column;
@@ -11,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -57,6 +60,9 @@ public class Report {
     @ManyToOne
     @JoinColumn(name = "pratica_id")
     private Case associatedCase;
+
+    @OneToMany(mappedBy = "report")
+    private List<Photo> photos = new ArrayList<>();
 
     public Report(String trackingCodeHash, BigDecimal latitude, BigDecimal longitude, Insect reportedInsect,
             Municipality municipality, String reporterEmail, String description) {
@@ -144,6 +150,10 @@ public class Report {
 
     public Case getAssociatedCase() {
         return this.associatedCase;
+    }
+
+    public List<Photo> getPhotos() {
+        return this.photos;
     }
 
     public void confirm(Insect confirmInsect) {

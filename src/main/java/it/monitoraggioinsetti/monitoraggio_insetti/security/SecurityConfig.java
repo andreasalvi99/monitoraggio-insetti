@@ -32,7 +32,7 @@ public class SecurityConfig {
                                                 .anyRequest().hasRole("OPERATORE"))
                                 .formLogin(form -> form
                                                 .loginPage("/login")
-                                                .defaultSuccessUrl("/api/segnalazioni", true)
+                                                .defaultSuccessUrl("/segnalazioni", true)
                                                 .permitAll())
                                 .httpBasic(Customizer.withDefaults());
 

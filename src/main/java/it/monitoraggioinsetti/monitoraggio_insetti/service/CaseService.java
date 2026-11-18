@@ -52,7 +52,7 @@ public class CaseService {
 
     }
 
-    private double calculateDistaceMeters(GeographicCenter center, Report report) {
+    private double calculateDistanceMeters(GeographicCenter center, Report report) {
         double centerLatitude = Math.toRadians(center.latitude().doubleValue());
         double centerLongitude = Math.toRadians(center.longitude().doubleValue());
 
@@ -78,7 +78,7 @@ public class CaseService {
 
     private User findOperator(Long operatorId) {
         if (operatorId == null)
-            throw new IllegalArgumentException("L'ID dell'operatore è obbgliatorio");
+            throw new IllegalArgumentException("L'ID dell'operatore è obbligatorio");
         return this.userRepository.findById(operatorId).orElseThrow(() -> new UserNotFoundException(operatorId));
     }
 
@@ -99,7 +99,7 @@ public class CaseService {
             throw new IllegalArgumentException("La stessa segnalazione appare più volte");
 
         if (reportIds.contains(null))
-            throw new IllegalArgumentException("GLi ID delle segnalazioni sono obbligatori");
+            throw new IllegalArgumentException("Gli ID delle segnalazioni sono obbligatori");
 
         List<Long> sortedReportIds = new ArrayList<>(reportIds);
         sortedReportIds.sort(Long::compareTo);
@@ -150,7 +150,7 @@ public class CaseService {
             if (group.size() == maxGroupSize) {
                 GeographicCenter center = calculateCenter(group);
                 for (Report report : group) {
-                    if (calculateDistaceMeters(center, report) > 100)
+                    if (calculateDistanceMeters(center, report) > 100)
                         throw new IllegalArgumentException("La distanza della segnalazione con ID " + report.getId()
                                 + " dista più di 100m dal centro della pratica");
 

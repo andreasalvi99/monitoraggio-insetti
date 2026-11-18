@@ -1,5 +1,7 @@
 package it.monitoraggioinsetti.monitoraggio_insetti.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,5 +87,10 @@ public class VerificationService {
 
         Verification newVerification = new Verification(outcome, toVerify, operator, notes);
         return this.verificationRepository.save(newVerification);
+    }
+
+    public List<Verification> showHistory(Long reportId) {
+        findReport(reportId);
+        return this.verificationRepository.findByReportId(reportId);
     }
 }

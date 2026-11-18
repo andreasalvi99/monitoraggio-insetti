@@ -153,6 +153,7 @@ public class PhotoService {
         registerRollbackCleanup(destination);
 
         Photo photo = new Photo(fileName, report);
+        report.addPhoto(photo);
         return this.photoRepository.saveAndFlush(photo);
 
     }

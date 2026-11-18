@@ -85,7 +85,8 @@ public class CaseService {
     private Report findReport(Long reportId) {
         if (reportId == null)
             throw new IllegalArgumentException("L'ID della segnalazione è obbligatorio");
-        return this.reportRepository.findById(reportId).orElseThrow(() -> new ReportNotFoundException(reportId));
+        return this.reportRepository.findByIdForUpdate(reportId)
+                .orElseThrow(() -> new ReportNotFoundException(reportId));
     }
 
     @Transactional
@@ -100,6 +101,9 @@ public class CaseService {
         if (reportIds.contains(null))
             throw new IllegalArgumentException("GLi ID delle segnalazioni sono obbligatori");
 
+        List<Long> sortedReportIds = new ArrayList<>(reportIds);
+        sortedReportIds.sort(Long::compareTo);
+
         User operator = findOperator(operatorId);
         if (!operator.isActive())
             throw new OperationNotAllowedException("L'utente non è attivo");
@@ -108,7 +112,7 @@ public class CaseService {
 
         Map<Long, List<Report>> reportsByInsectId = new HashMap<>();
 
-        for (Long reportId : reportIds) {
+        for (Long reportId : sortedReportIds) {
             Report report = findReport(reportId);
             if (report.getAssociatedCase() != null)
                 throw new OperationNotAllowedException(

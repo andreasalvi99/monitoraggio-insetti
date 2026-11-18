@@ -110,6 +110,9 @@ public class CaseService {
 
         for (Long reportId : reportIds) {
             Report report = findReport(reportId);
+            if (report.getAssociatedCase() != null)
+                throw new OperationNotAllowedException(
+                        "La segnalazione con ID " + reportId + " è già associata a una pratica");
             if (!"ACCERTATA".equals(report.getStatus()))
                 throw new IllegalArgumentException(
                         "La segnalazione con ID " + reportId + " non è ancora stata confermata");

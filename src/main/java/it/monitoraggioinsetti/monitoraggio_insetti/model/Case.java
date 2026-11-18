@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,8 +22,9 @@ public class Case {
     @Column(name = "id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "stato", nullable = false, length = 30)
-    private String status;
+    private CaseStatus status;
 
     @Column(name = "data_apertura", nullable = false)
     private LocalDateTime openedAt;
@@ -70,7 +73,7 @@ public class Case {
         if (longitude.stripTrailingZeros().scale() > 7)
             throw new IllegalArgumentException("Limite massimo di decimali superato");
 
-        this.status = "APERTA";
+        this.status = status.APERTA;
         this.description = description;
         this.openedAt = LocalDateTime.now();
         this.latitude = latitude;
@@ -86,7 +89,7 @@ public class Case {
         return this.id;
     }
 
-    public String getStatus() {
+    public CaseStatus getStatus() {
         return this.status;
     }
 

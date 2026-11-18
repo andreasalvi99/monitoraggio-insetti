@@ -3,6 +3,7 @@ package it.monitoraggioinsetti.monitoraggio_insetti.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import it.monitoraggioinsetti.monitoraggio_insetti.error.OperationNotAllowedException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -164,6 +165,10 @@ public class Report {
     }
 
     public void associateWithCase(Case associatedCase) {
+        if (associatedCase == null)
+            throw new IllegalArgumentException("La pratica è obbligatoria");
+        if (this.associatedCase != null)
+            throw new OperationNotAllowedException("La segnalazione è già associata a una pratica");
         this.associatedCase = associatedCase;
     }
 }

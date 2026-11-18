@@ -80,6 +80,7 @@ public class ReportService {
         return this.reportRepository.findAll();
     }
 
+    @Transactional
     public NewReportResponse create(BigDecimal latitude, BigDecimal longitude, Long reportedInsectId,
             Long municipalityId,
             String reporterEmail, String description, List<MultipartFile> photos) {

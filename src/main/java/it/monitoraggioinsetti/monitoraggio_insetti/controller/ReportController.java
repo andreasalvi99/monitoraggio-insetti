@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import it.monitoraggioinsetti.monitoraggio_insetti.dto.request.NewReportRequest;
 import it.monitoraggioinsetti.monitoraggio_insetti.dto.request.ReportStatusRequest;
@@ -44,11 +46,21 @@ public class ReportController {
         return ResponseEntity.ok(reportsConverted);
     }
 
-    @PostMapping("/api/segnalazioni")
+    @PostMapping(value = "/api/segnalazioni", consumes = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<NewReportResponse> create(@RequestBody NewReportRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(this.reportService.create(request.latitude(), request.longitude(), request.reportedInsectId(),
                         request.municipalityId(), request.reporterEmail(), request.description()));
+    }
+
+    @PostMapping(value = "/api/segnalazioni", consumes = org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<NewReportResponse> createWithPhotos(@RequestPart("report") NewReportRequest request,
+            @RequestPart(value = "photos", required = false) List<MultipartFile> photos) {
+        NewReportResponse response = this.reportService.create(request.latitude(), request.longitude(),
+                request.reportedInsectId(), request.municipalityId(), request.reporterEmail(), request.description(),
+                photos);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/api/segnalazioni/stato")

@@ -53,7 +53,11 @@ public class CaseService {
     }
 
     private double calculateDistaceMeters(GeographicCenter center, Report report) {
+        double centerLatitude = Math.toRadians(center.latitude().doubleValue());
+        double centerLongitude = Math.toRadians(center.longitude().doubleValue());
 
+        double reportLatitude = Math.toRadians(report.getLatitude().doubleValue());
+        double reportLongitude = Math.toRadians(report.getLongitude().doubleValue());
     }
 
     private User findOperator(Long operatorId) {

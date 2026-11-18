@@ -1,11 +1,16 @@
 package it.monitoraggioinsetti.monitoraggio_insetti.service;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Iterator;
+import java.util.UUID;
 
+import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
@@ -79,6 +84,30 @@ public class PhotoService {
 
     }
 
+    private void writeFile(MultipartFile file, Path destination) {
+        boolean fileCreated = false;
+
+        try (InputStream input = file.getInputStream()) {
+            OutputStream output = Files.newOutputStream(destination, StandardOpenOption.CREATE_NEW,
+                    StandardOpenOption.WRITE);
+
+            fileCreated = true;
+
+            try (output) {
+                input.transferTo(output);
+            }
+        } catch (IOException e) {
+            if (fileCreated) {
+                try {
+                    Files.deleteIfExists(destination);
+                } catch (IOException cleanupException) {
+                    e.addSuppressed(cleanupException);
+                }
+                throw new IllegalStateException("Impossibile salvare le foto", e);
+            }
+        }
+    }
+
     public Photo save(MultipartFile file, Report report) {
         if (file == null || file.isEmpty())
             throw new IllegalArgumentException("La foto è obbligatoria");
@@ -93,6 +122,9 @@ public class PhotoService {
             throw new IllegalArgumentException("Sono ammesse solo immagini JPEG e PNG");
 
         String extension = validateImage(file);
+
+        String fileName = UUID.randomUUID() + "." + extension;
+        Path destination = this.photosDirectory.resolve(fileName);
 
     }
 

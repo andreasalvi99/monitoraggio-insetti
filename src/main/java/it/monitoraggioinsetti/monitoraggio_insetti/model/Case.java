@@ -3,6 +3,7 @@ package it.monitoraggioinsetti.monitoraggio_insetti.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import it.monitoraggioinsetti.monitoraggio_insetti.error.OperationNotAllowedException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -119,5 +120,37 @@ public class Case {
 
     public User getOpenedBy() {
         return this.openedBy;
+    }
+
+    public void startWork() {
+        if (this.status == CaseStatus.IN_LAVORAZIONE)
+            throw new OperationNotAllowedException("La pratica è già in lavorazione");
+        this.status = CaseStatus.IN_LAVORAZIONE;
+
+        this.closedAt = null;
+    }
+
+    public void putOnHold() {
+        if (this.status == CaseStatus.IN_ATTESA)
+            throw new OperationNotAllowedException("La pratica è già in attesa");
+        this.status = CaseStatus.IN_ATTESA;
+
+        this.closedAt = null;
+    }
+
+    public void complete() {
+        if (this.status == CaseStatus.EVASA)
+            throw new OperationNotAllowedException("La pratica è già stata evasa");
+        this.status = CaseStatus.EVASA;
+
+        this.closedAt = LocalDateTime.now();
+    }
+
+    public void fail() {
+        if (this.status == CaseStatus.FALLITA)
+            throw new OperationNotAllowedException("La pratica è già fallita");
+        this.status = CaseStatus.FALLITA;
+
+        this.closedAt = LocalDateTime.now();
     }
 }

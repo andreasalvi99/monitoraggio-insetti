@@ -181,4 +181,13 @@ public class Report {
             throw new OperationNotAllowedException("La segnalazione è già associata a una pratica");
         this.associatedCase = associatedCase;
     }
+
+    public void addPhoto(Photo photo) {
+        if (photo == null)
+            throw new IllegalArgumentException("La foto è obbligatoria");
+        if (photo.getReport() != this)
+            throw new IllegalArgumentException("Questa foto appartiene a un'altra segnalazione");
+
+        this.photos.add(photo);
+    }
 }

@@ -29,7 +29,7 @@ public class SecurityConfig {
                                                                 "/api/segnalazioni",
                                                                 "/api/segnalazioni/stato")
                                                 .permitAll()
-                                                .requestMatchers(HttpMethod.GET, "/css/**", "/js/**").permitAll()
+                                                .requestMatchers(HttpMethod.GET, "/css/**").permitAll()
                                                 .anyRequest().hasRole("OPERATORE"))
                                 .formLogin(form -> form
                                                 .loginPage("/login")

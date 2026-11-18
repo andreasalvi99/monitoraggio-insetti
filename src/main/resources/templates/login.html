@@ -4,20 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Accesso - Monitoraggio insetti</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/tailwind.css}" />
   </head>
-  <body class="bg-body-tertiary">
-    <main class="container py-5" style="max-width: 480px;">
-      <h1 class="h3 mb-4">Accesso operatori</h1>
+  <body class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+    <main
+      class="mx-auto mt-12 w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:mt-20 sm:p-8"
+    >
+      <h1 class="mb-6 text-2xl font-semibold tracking-tight">
+        Accesso operatori
+      </h1>
 
-      <p class="alert alert-danger" th:if="${param.error}" role="alert">Email o password non valide</p>
-      <p class="alert alert-success" th:if="${param.logout}">Disconnessione effettuata</p>
+      <p
+        class="mb-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800"
+        th:if="${param.error}"
+        role="alert"
+      >
+        Email o password non valide
+      </p>
+      <p
+        class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800"
+        th:if="${param.logout}"
+      >
+        Disconnessione effettuata
+      </p>
 
       <form th:action="@{/login}" method="post">
-        <div class="mb-3">
-          <label class="form-label" for="email">Email</label>
+        <div class="mb-5">
+          <label class="mb-2 block text-sm font-medium" for="email"
+            >Email</label
+          >
           <input
-            class="form-control"
+            class="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
             id="email"
             type="email"
             name="username"
@@ -25,10 +42,12 @@
             required
           />
         </div>
-        <div class="mb-3">
-          <label class="form-label" for="password">Password</label>
+        <div class="mb-5">
+          <label class="mb-2 block text-sm font-medium" for="password"
+            >Password</label
+          >
           <input
-            class="form-control"
+            class="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
             id="password"
             type="password"
             name="password"
@@ -36,9 +55,13 @@
             required
           />
         </div>
-        <button class="btn btn-primary w-100" type="submit">Accedi</button>
+        <button
+          class="w-full cursor-pointer rounded-lg bg-blue-700 px-4 py-2.5 font-medium text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700"
+          type="submit"
+        >
+          Accedi
+        </button>
       </form>
     </main>
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
   </body>
 </html>

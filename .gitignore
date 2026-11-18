@@ -37,3 +37,5 @@ build/
 
 ### uploads ###
 /uploads/
+
+/node_modules/

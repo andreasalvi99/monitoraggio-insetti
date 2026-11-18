@@ -1,0 +1,12 @@
+{
+  "name": "monitoraggio-insetti-ui",
+  "private": true,
+  "scripts": {
+    "build:css": "tailwindcss -i ./frontend/tailwind.css -o ./src/main/resources/static/css/tailwind.css --minify",
+    "watch:css": "tailwindcss -i ./frontend/tailwind.css -o ./src/main/resources/static/css/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "4.3.5",
+    "tailwindcss": "4.3.5"
+  }
+}

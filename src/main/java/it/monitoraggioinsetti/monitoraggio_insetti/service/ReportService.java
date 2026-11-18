@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import it.monitoraggioinsetti.monitoraggio_insetti.dto.response.NewReportResponse;
 import it.monitoraggioinsetti.monitoraggio_insetti.error.InsectNotFoundException;
@@ -28,12 +30,14 @@ public class ReportService {
     private final InsectRepository insectRepository;
     private final MunicipalityRepository municipalityRepository;
     private final SecureRandom secureRandom = new SecureRandom();
+    private final PhotoService photoService;
 
     public ReportService(ReportRepository reportRepository, InsectRepository insectRepository,
-            MunicipalityRepository municipalityRepository) {
+            MunicipalityRepository municipalityRepository, PhotoService photoService) {
         this.reportRepository = reportRepository;
         this.insectRepository = insectRepository;
         this.municipalityRepository = municipalityRepository;
+        this.photoService = photoService;
     }
 
     private Insect findInsect(Long insectId) {
@@ -78,7 +82,7 @@ public class ReportService {
 
     public NewReportResponse create(BigDecimal latitude, BigDecimal longitude, Long reportedInsectId,
             Long municipalityId,
-            String reporterEmail, String description) {
+            String reporterEmail, String description, List<MultipartFile> photos) {
         Insect toFindInsect = findInsect(reportedInsectId);
         Municipality toFindMunicipality = findMunicipality(municipalityId);
         String trackingCode = generateTrackingCode();
@@ -86,7 +90,25 @@ public class ReportService {
         Report newReport = new Report(trackingCodeHash, latitude, longitude, toFindInsect, toFindMunicipality,
                 reporterEmail, description);
         Report savedReport = this.reportRepository.save(newReport);
+        if (photos != null) {
+            for (MultipartFile photo : photos) {
+                this.photoService.save(photo, savedReport);
+            }
+        }
         return new NewReportResponse(savedReport.getId(), trackingCode);
+    }
+
+    @Transactional
+    public NewReportResponse create(
+            BigDecimal latitude,
+            BigDecimal longitude,
+            Long reportedInsectId,
+            Long municipalityId,
+            String reporterEmail,
+            String description) {
+
+        return create(latitude, longitude, reportedInsectId, municipalityId,
+                reporterEmail, description, List.of());
     }
 
 }
